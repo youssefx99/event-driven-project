@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumer
+  template:
+    metadata:
+      labels:
+        app: consumer
+    spec:
+      containers:
+        - name: consumer
+          image: your-dockerhub-username/consumer:latest
+          command: ["node", "src/infrastructure/kafka/consumer.js"]
+          envFrom:
+            - configMapRef:
+                name: app-config

@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  producer:
+    build: .
+    command: node src/infrastructure/kafka/producer.js
+    environment:
+      - MONGODB_URI=mongodb+srv://yousseffaisal20:Yyoussef159@cluster0.zqmzxsk.mongodb.net/activity_logs?retryWrites=true&w=majority&appName=Cluster0
+    depends_on:
+      - kafka
+
+  consumer:
+    build: .
+    command: node src/infrastructure/kafka/consumer.js
+    environment:
+      - MONGODB_URI=mongodb+srv://yousseffaisal20:Yyoussef159@cluster0.zqmzxsk.mongodb.net/activity_logs?retryWrites=true&w=majority&appName=Cluster0
+    depends_on:
+      - kafka
+
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    command: node index.js
+    environment:
+      - MONGODB_URI=mongodb+srv://yousseffaisal20:Yyoussef159@cluster0.zqmzxsk.mongodb.net/activity_logs?retryWrites=true&w=majority&appName=Cluster0
+      - PORT=3000
+    depends_on:
+      - kafka
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
