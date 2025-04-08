@@ -100,16 +100,6 @@ GET /api/logs?userId=user-1&eventType=login&page=1&pageSize=5
 
 ---
 
-## Demo Recording
-
-I’ve included a short recorded demo in the repo showing:
-
-- Services spinning up
-- Kafka logs flowing
-- API calls returning real data
-
----
-
 ## Why I Chose This Architecture
 
 - **Event-Driven Design** with Kafka gives clean separation between producers and consumers, making it scalable and easy to extend.
