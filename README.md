@@ -2,7 +2,7 @@
 
 Hey there!
 
-This repo contains my submission for the Eyego Backend Internship technical task. It’s a fully working, event-driven logging microservice built with Node.js, Kafka, and MongoDB, using Domain-Driven Design principles and containerized with Docker.
+This is a project of event-driven logging microservice built with Node.js, Kafka, and MongoDB, using Domain-Driven Design principles and containerized with Docker.
 
 ---
 
