@@ -5,7 +5,7 @@ services:
     build: .
     command: node src/infrastructure/kafka/producer.js
     environment:
-      - MONGODB_URI=mongodb+srv://yousseffaisal20:Yyoussef159@cluster0.zqmzxsk.mongodb.net/activity_logs?retryWrites=true&w=majority&appName=Cluster0
+      - MONGODB_URI=${MONGODB_URI}
     depends_on:
       - kafka
 
@@ -13,7 +13,7 @@ services:
     build: .
     command: node src/infrastructure/kafka/consumer.js
     environment:
-      - MONGODB_URI=mongodb+srv://yousseffaisal20:Yyoussef159@cluster0.zqmzxsk.mongodb.net/activity_logs?retryWrites=true&w=majority&appName=Cluster0
+      - MONGODB_URI=${MONGODB_URI}
     depends_on:
       - kafka
 
@@ -23,7 +23,7 @@ services:
       - "3000:3000"
     command: node index.js
     environment:
-      - MONGODB_URI=mongodb+srv://yousseffaisal20:Yyoussef159@cluster0.zqmzxsk.mongodb.net/activity_logs?retryWrites=true&w=majority&appName=Cluster0
+      - MONGODB_URI=${MONGODB_URI}
       - PORT=3000
     depends_on:
       - kafka
