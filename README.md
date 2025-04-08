@@ -64,7 +64,8 @@ PORT=3000
 ### 3. Start services
 
 ```bash
-docker-compose up --build
+docker-compose build
+docker-compose up
 ```
 
 This starts:
