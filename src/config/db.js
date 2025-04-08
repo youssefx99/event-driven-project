@@ -1,17 +1,17 @@
 const mongoose = require("mongoose");
 
-mongoose.set("bufferCommands", false); // Prevent queuing up inserts when disconnected
+mongoose.set("bufferCommands", false); // Prevent to queue up insertion when it is disconnected
 
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      connectTimeoutMS: 20000, // 20 seconds to allow cloud MongoDB to respond
+      connectTimeoutMS: 20000, // wait some time till connection (20 sec)
     });
-    console.log("✅ MongoDB Connected");
+    console.log("MongoDB Connected");
   } catch (err) {
-    console.error("❌ MongoDB connection error:", err.message);
+    console.error("MongoDB connection error:", err.message);
     process.exit(1);
   }
 };
