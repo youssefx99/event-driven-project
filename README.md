@@ -32,12 +32,13 @@ src/
 ├── api/                # HTTP layer (Express routes and controllers)
 │   ├── controllers/
 │   └── routes/
+|__config/
+|    |__db.js           # database connection
 ├── application/        # Services orchestrating business logic
 ├── domain/             # Entities, value objects, and event types
 │   ├── events/
 ├── infrastructure/     # Kafka setup and DB connection
 │   ├── kafka/
-│   └── db/
 ```
 
 ---
