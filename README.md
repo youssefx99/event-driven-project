@@ -59,6 +59,7 @@ Create a `.env` file in the root with your MongoDB URI:
 ```env
 MONGODB_URI=mongodb+srv://<your-user>:<your-pass>@cluster0.mongodb.net/activity_logs?retryWrites=true&w=majority&appName=Cluster0
 PORT=3000
+KAFKAJS_NO_PARTITIONER_WARNING=1     
 ```
 
 ### 3. Start services
