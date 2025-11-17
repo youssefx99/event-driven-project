@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: app-config
 data:
-  MONGODB_URI: 'mongodb+srv://your-username:your-password@cluster0.mongodb.net/activity_logs?retryWrites=true&w=majority'
+  MONGODB_URI: 'YOUR_MONGODB_URL/activity_logs?retryWrites=true&w=majority'
   PORT: '3000'
   KAFKAJS_NO_PARTITIONER_WARNING: '1'
