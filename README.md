@@ -29,15 +29,15 @@ It’s designed to be scalable, modular, and easy to deploy — both locally and
 
 ```bash
 src/
-├── api/                # HTTP layer (Express routes and controllers)
+├── api/
 │   ├── controllers/
 │   └── routes/
 |__config/
-|    |__db.js           # database connection
-├── application/        # Services orchestrating business logic
-├── domain/             # Entities, value objects, and event types
+|    |__db.js
+├── application/
+├── domain/
 │   ├── events/
-├── infrastructure/     # Kafka setup and DB connection
+├── infrastructure/
 │   ├── kafka/
 ```
 
@@ -59,7 +59,7 @@ Create a `.env` file in the root with your MongoDB URI:
 ```env
 MONGODB_URI=mongodb+srv://<your-user>:<your-pass>@cluster0.mongodb.net/activity_logs?retryWrites=true&w=majority&appName=Cluster0
 PORT=3000
-KAFKAJS_NO_PARTITIONER_WARNING=1     
+KAFKAJS_NO_PARTITIONER_WARNING=1
 ```
 
 ### 3. Start services
@@ -100,9 +100,77 @@ GET /api/logs?userId=user-1&eventType=login&page=1&pageSize=5
 
 ---
 
-## Why I Chose This Architecture
+## Architecture Explanation
 
-- **Event-Driven Design** with Kafka gives clean separation between producers and consumers, making it scalable and easy to extend.
-- **DDD Principles** help keep logic isolated and testable.
-- **Docker & Compose** makes it super easy to spin everything up locally or in CI.
-- I chose MongoDB Atlas for a reliable cloud DB without needing to manage state.
+### Why Event-Driven Architecture?
+
+This microservice follows an **event-driven architecture** using Apache Kafka as the message broker. Here's why:
+
+1. **Decoupling**: Producers and consumers are completely independent. The API can generate events without knowing who processes them.
+2. **Scalability**: Multiple consumers can process events in parallel. As load increases, we can add more consumer instances.
+3. **Reliability**: Kafka persists messages, ensuring no data loss even if consumers are temporarily down.
+4. **Real-time Processing**: Events are processed as they occur, enabling real-time analytics and monitoring.
+
+### Domain-Driven Design (DDD) Structure
+
+The project follows DDD principles to maintain clean, maintainable code:
+
+```
+src/
+├── domain/
+│   ├── activityEvent.js
+│   └── events/
+│
+├── application/
+│   └── logQueryService.js
+│
+├── infrastructure/
+│   ├── kafka/
+│   │   ├── producer.js
+│   │   ├── consumer.js
+│   │   └── kafkaClient.js
+│   └── config/
+│       └── db.js
+│
+└── api/
+    ├── controllers/
+    │   └── logController.js
+    └── routes/
+        └── logRoutes.js
+```
+
+**Key DDD Concepts Applied:**
+
+- **Domain Layer**: Contains `ActivityEvent` entity with business rules and proper MongoDB indexes for query optimization
+- **Application Layer**: `logQueryService` orchestrates business workflows without knowing HTTP or infrastructure details
+- **Infrastructure Layer**: Handles technical concerns (Kafka, MongoDB) isolated from business logic
+- **API Layer**: Thin layer translating HTTP requests to application service calls
+
+### Event Flow
+
+```
+1. Producer → Generates user activity events → Publishes to Kafka topic "user-activity"
+2. Kafka → Stores events in distributed log → Ensures durability and ordering
+3. Consumer → Subscribes to "user-activity" topic → Processes events → Stores in MongoDB
+4. REST API → Queries MongoDB → Returns filtered/paginated results to clients
+```
+
+### MongoDB Indexing Strategy
+
+Optimized indexes for common query patterns:
+
+- **Compound Index** `{ userId: 1, timestamp: -1 }`: Fast lookups for user-specific logs sorted by time
+- **Compound Index** `{ eventType: 1, timestamp: -1 }`: Filter by event type with time sorting
+- **Compound Index** `{ userId: 1, eventType: 1, timestamp: -1 }`: Combined filters with sorting
+- **Single Index** `{ timestamp: -1 }`: Date range queries and general time-based sorting
+
+These indexes dramatically improve query performance, especially with large datasets.
+
+### Technology Choices
+
+- **Node.js + Express**: Lightweight, perfect for I/O-heavy operations and Kafka integration
+- **Apache Kafka**: Industry-standard for event streaming with high throughput and fault tolerance
+- **MongoDB**: Document database ideal for flexible log schemas and fast writes
+- **Docker & Kubernetes**: Containerization ensures consistent deployments across environments
+
+---

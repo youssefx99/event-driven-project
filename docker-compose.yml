@@ -1,42 +1,45 @@
-version: "3.8"
+version: '3.8'
 
 services:
   producer:
     build: .
-    command: node src/infrastructure/kafka/producer.js
     environment:
       - MONGODB_URI=${MONGODB_URI}
+      - NODE_ENV=producer
+      - KAFKAJS_NO_PARTITIONER_WARNING=1
     depends_on:
       - kafka
 
   consumer:
     build: .
-    command: node src/infrastructure/kafka/consumer.js
     environment:
       - MONGODB_URI=${MONGODB_URI}
+      - NODE_ENV=consumer
+      - KAFKAJS_NO_PARTITIONER_WARNING=1
     depends_on:
       - kafka
 
   api:
     build: .
     ports:
-      - "3000:3000"
-    command: node index.js
+      - '3000:3000'
     environment:
       - MONGODB_URI=${MONGODB_URI}
       - PORT=3000
+      - NODE_ENV=api
+      - KAFKAJS_NO_PARTITIONER_WARNING=1
     depends_on:
       - kafka
 
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
-      - "2181:2181"
+      - '2181:2181'
 
   kafka:
     image: wurstmeister/kafka
     ports:
-      - "9092:9092"
+      - '9092:9092'
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181

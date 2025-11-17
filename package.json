@@ -1,4 +1,25 @@
 {
+  "name": "event-driven-microservice",
+  "version": "1.0.0",
+  "description": "Event-driven microservice using Node.js, Express, Kafka, and MongoDB with DDD architecture",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "producer": "NODE_ENV=producer node index.js",
+    "consumer": "NODE_ENV=consumer node index.js",
+    "api": "NODE_ENV=api node index.js"
+  },
+  "keywords": [
+    "kafka",
+    "microservice",
+    "event-driven",
+    "mongodb",
+    "ddd",
+    "express"
+  ],
+  "author": "youssefx99",
+  "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
@@ -7,16 +28,5 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
-  },
-  "name": "eyego",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  }
 }
